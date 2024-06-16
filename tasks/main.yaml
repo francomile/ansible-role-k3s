@@ -1,0 +1,29 @@
+---
+  # If k3s is already installed, we skip re-running the installation roles.
+- name: "K3s | Check if k3s is installed"
+  ansible.builtin.stat:
+    path: "{{ k3s_install_lockfile }}"
+  register: is_installed
+
+  # Install K3s server
+- name: "K3s | Install k3s server"
+  ansible.builtin.include_tasks: server.yaml
+  when:
+    - not is_installed.stat.exists
+    - not (k3s_remove_k3s | bool)
+    - k3s_node_label_role == "server"
+  tags: ["k3s-server"]
+
+  # Install K3s agent
+- name: "K3s | Install k3s agent"
+  ansible.builtin.include_tasks: agent.yaml
+  when:
+    - not is_installed.stat.exists
+    - not (k3s_remove_k3s | bool)
+    - k3s_node_label_role == "agent"
+  tags: ["k3s-agent"]
+
+- name: "K3s | Remove k3s"
+  ansible.builtin.include_tasks: remove.yaml
+  when: (k3s_remove_k3s | bool)
+  tags: ["remove"]

@@ -1,0 +1,17 @@
+---
+- name: "K3s | Remove k3s server"
+  ansible.builtin.command:
+    cmd: "/usr/local/bin/k3s-uninstall.sh"
+  changed_when: true
+  when: k3s_node_label_role == "server"
+
+- name: "K3s | Remove k3s agent"
+  ansible.builtin.command:
+    cmd: "/usr/local/bin/k3s-agent-uninstall.sh"
+  changed_when: true
+  when: k3s_node_label_role == "agent"
+
+- name: "K3s | Remove installation lockfile"
+  ansible.builtin.file:
+    path: "{{ k3s_install_lockfile }}"
+    state: absent

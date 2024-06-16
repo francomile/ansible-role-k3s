@@ -1,0 +1,40 @@
+---
+# k3s variables
+k3s_version: "v1.28.4+k3s2"
+k3s_token: "mysecret"
+k3s_api_port: 6443
+# the below variable relies on the inventory group named "servers". See README.md.
+k3s_url: "https://{{ hostvars[groups['servers'][0]]['ansible_host'] }}:{{ k3s_api_port }}"
+k3s_node_label_host: "{{ ansible_hostname | lower }}"
+k3s_node_label_role: "server"
+k3s_install_script: "install-k3s.sh"
+k3s_server_install_args: >-
+  --node-ip="{{ ansible_default_ipv4.address }}"
+  --node-external-ip="{{ ansible_default_ipv4.address }}"
+  --cluster-cidr=198.18.0.0/16
+  --service-cidr=198.19.0.0/16
+  --cluster-dns=198.19.0.10
+  --node-label server-host="{{ k3s_node_label_host }}"
+  --node-label server-role="{{ k3s_node_label_role }}"
+k3s_agent_install_args: >-
+  --node-ip="{{ ansible_default_ipv4.address }}"
+  --node-external-ip="{{ ansible_default_ipv4.address }}"
+  --node-label server-host="{{ k3s_node_label_host }}"
+  --node-label server-role="{{ k3s_node_label_role }}"
+# Installation vars
+k3s_install_lockfile: "/etc/k3s_installed"
+k3s_install_cert_cronjob: false
+k3s_cronjob_random_minutes_list: ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50']
+# Used for removing the installation
+k3s_remove_k3s: false
+
+## Firewall notes
+# ---
+# Ports open needed for the cluster
+# Server: 6443
+# nodes: 8472
+# Flannel VXLAN backend, or over UDP port 51820
+# Metrics server: 10250
+# high availability with embedded etcd, server nodes must be accessible to each other on ports 2379 and 2380.
+# Disable all these ports access from inernet
+# ---

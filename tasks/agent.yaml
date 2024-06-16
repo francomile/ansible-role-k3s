@@ -1,0 +1,36 @@
+---
+- name: "K3s | Dowload k3s installation script"
+  ansible.builtin.get_url:
+    url: "https://get.k3s.io/"
+    dest: "/usr/local/bin/{{ k3s_install_script }}"
+    mode: '0755'
+    owner: root
+    group: root
+    timeout: 120
+
+- name: "K3s | Install k3s-agent"
+  ansible.builtin.command:
+    cmd: "/usr/local/bin/{{ k3s_install_script }}"
+  environment:
+    INSTALL_K3S_SKIP_START: "true"
+    K3S_TOKEN: "{{ k3s_token }}"
+    K3S_URL: "{{ k3s_url }}"
+    INSTALL_K3S_EXEC: "agent {{ k3s_agent_install_args }}"
+  args:
+    creates: /etc/varnish-software/k3s_installed
+  register: k3s_install
+  changed_when: true
+
+- name: "K3s | Wait for k3s server to be up"
+  ansible.builtin.wait_for:
+    host: "{{ hostvars[groups['servers'][0]]['ansible_host'] }}"
+    port: "{{ k3s_api_port }}"
+    delay: 5
+    timeout: 120
+
+- name: "K3s | Enable k3s-agent service"
+  ansible.builtin.systemd:
+    name: k3s-agent
+    state: started
+    enabled: true
+    daemon_reload: true
