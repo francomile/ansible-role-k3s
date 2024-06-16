@@ -27,7 +27,7 @@ all:
     servers:
       hosts:
         # First server will be the one used for k3s_url var, and
-        # will be the one agents are goping to connect.
+        # will be the one agents are going to connect.
         k3s-server01:
           ansible_host: "100.64.64.64"
           k3s_node_label_role: "server"
