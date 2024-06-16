@@ -1,5 +1,9 @@
 # K3s role
 
+[![Lint Ansible roles](https://github.com/francomile/ansible-role-k3s/actions/workflows/ansible_lint.yml/badge.svg)](https://github.com/francomile/ansible-role-k3s/actions/workflows/ansible_lint.yml)
+
+[![Release role to Ansible Galaxy](https://github.com/francomile/ansible-role-k3s/actions/workflows/push_to_galaxy.yml/badge.svg)](https://github.com/francomile/ansible-role-k3s/actions/workflows/push_to_galaxy.yml)
+
 ## Actions of the Role
 
 * Install K3s server and agents
