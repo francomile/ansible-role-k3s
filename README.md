@@ -1,4 +1,4 @@
-# K3s role
+# Ansible K3s Role
 
 [![Lint Ansible roles](https://github.com/francomile/ansible-role-k3s/actions/workflows/ansible_lint.yml/badge.svg)](https://github.com/francomile/ansible-role-k3s/actions/workflows/ansible_lint.yml)
 
