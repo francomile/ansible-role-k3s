@@ -13,7 +13,7 @@
 ```yaml
 roles:
   - {
-    role: k3s,
+    role: francomile.k3s,
     tags: ["k3s"]
     }
 ```
